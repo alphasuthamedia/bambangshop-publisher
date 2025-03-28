@@ -48,28 +48,28 @@ You can install Postman via this website: https://www.postman.com/downloads/
     (You might want to use `cargo check` if you only need to verify your work without running the app.)
 
 ## Mandatory Checklists (Publisher)
--   [ ] Clone https://gitlab.com/ichlaffterlalu/bambangshop to a new repository.
+-   [x] Clone https://gitlab.com/ichlaffterlalu/bambangshop to a new repository.
 -   **STAGE 1: Implement models and repositories**
-    -   [ ] Commit: `Create Subscriber model struct.`
-    -   [ ] Commit: `Create Notification model struct.`
-    -   [ ] Commit: `Create Subscriber database and Subscriber repository struct skeleton.`
-    -   [ ] Commit: `Implement add function in Subscriber repository.`
-    -   [ ] Commit: `Implement list_all function in Subscriber repository.`
-    -   [ ] Commit: `Implement delete function in Subscriber repository.`
-    -   [ ] Write answers of your learning module's "Reflection Publisher-1" questions in this README.
+    -   [x] Commit: `Create Subscriber model struct.`
+    -   [x] Commit: `Create Notification model struct.`
+    -   [x] Commit: `Create Subscriber database and Subscriber repository struct skeleton.`
+    -   [x] Commit: `Implement add function in Subscriber repository.`
+    -   [x] Commit: `Implement list_all function in Subscriber repository.`
+    -   [x] Commit: `Implement delete function in Subscriber repository.`
+    -   [x] Write answers of your learning module's "Reflection Publisher-1" questions in this README.
 -   **STAGE 2: Implement services and controllers**
-    -   [ ] Commit: `Create Notification service struct skeleton.`
-    -   [ ] Commit: `Implement subscribe function in Notification service.`
-    -   [ ] Commit: `Implement subscribe function in Notification controller.`
-    -   [ ] Commit: `Implement unsubscribe function in Notification service.`
-    -   [ ] Commit: `Implement unsubscribe function in Notification controller.`
-    -   [ ] Write answers of your learning module's "Reflection Publisher-2" questions in this README.
+    -   [x] Commit: `Create Notification service struct skeleton.`
+    -   [x] Commit: `Implement subscribe function in Notification service.`
+    -   [x] Commit: `Implement subscribe function in Notification controller.`
+    -   [x] Commit: `Implement unsubscribe function in Notification service.`
+    -   [x] Commit: `Implement unsubscribe function in Notification controller.`
+    -   [x] Write answers of your learning module's "Reflection Publisher-2" questions in this README.
 -   **STAGE 3: Implement notification mechanism**
-    -   [ ] Commit: `Implement update method in Subscriber model to send notification HTTP requests.`
-    -   [ ] Commit: `Implement notify function in Notification service to notify each Subscriber.`
-    -   [ ] Commit: `Implement publish function in Program service and Program controller.`
-    -   [ ] Commit: `Edit Product service methods to call notify after create/delete.`
-    -   [ ] Write answers of your learning module's "Reflection Publisher-3" questions in this README.
+    -   [x] Commit: `Implement update method in Subscriber model to send notification HTTP requests.`
+    -   [x] Commit: `Implement notify function in Notification service to notify each Subscriber.`
+    -   [x] Commit: `Implement publish function in Program service and Program controller.`
+    -   [x] Commit: `Edit Product service methods to call notify after create/delete.`
+    -   [x] Write answers of your learning module's "Reflection Publisher-3" questions in this README.
 
 ## Your Reflections
 This is the place for you to write reflections:
@@ -77,7 +77,24 @@ This is the place for you to write reflections:
 ### Mandatory (Publisher) Reflections
 
 #### Reflection Publisher-1
+1. untuk case kali ini kita sbetulnay tidak perlu menggunakan sebuah interface atau train. menggunakan satu struct saja sebetulnya sudah cukup karena kita hanya mengimplementasikan satu observer yaitu kelas subscriber. menggunakan intefcae akan lebih mendatangkan benefit jika kita menggunakan lebih dari satu observer.
+
+2. sebetulnya saya rasa lebih efisien menggunakan dashmap, mengapa karena pemanggilan dengan id atau index membolehkan kita mdenapatakan kompleksitas yang cukup baik O(1). selain demikain, menggunakan dashmap membolehkan kita menggunakan akses secara konkurensi.
+
+3. karena bambangshop menggunkaan multithreaded environment. dashmap adalah pilihan terbaik daripadai singleton patter. dashmap itu thread-safe yang membolehkan kita menggunkan multithread secara bersamaan untuk mengakses datanya tanpa sinkronisasi secara manual.
 
 #### Reflection Publisher-2
+1. memisahkan service dan repository dari model membuat projek yang sedang kita kerjakan menjadi lebih terstruktu dan mudah untuk diekskalasi. hal ini karena kita mengikuti SRP single responisbility principle, dimana business logic dimanage di serrive layer, sedndangkan dara di dalam repositoy.
+
+2. sangat ussah untuk skalabilitas. dengan hanya menggunakan model kita akan susah untuk memange business logic, dan database secara bersamaan.
+
+3. yes i do. since saya sudah pernah membuat projek mikroservis sebelumnya, potman membantu saya untuk melakukan api call. selain ringan simulasi yang bisa dilakukan dengean postman juga banyak, seperti user agent yang bisa ganti ganti. menurut saya fitur yang helpful di postman adalah raw parameter dan body, dimana saya sendiri sanat sering menggunakannya untuk melakukan testing api call degan data.
 
 #### Reflection Publisher-3
+1. di tutorial in ikita menggunakan push model. dimana publisher mendistribusikan update kepada semua subscriber jika terdapat operasi crud. behavior ini diimplementasikan lewat method notify yang ada.
+
+2. pros : subscriber punya kemampuan untuk mendice data apa yang akan mereka terima dari publihser. hal ini membuat fleksibiltas dan efisiensi menigkat.
+
+cons : subscriber perlu melakukan call berturut turut untuk memastikan mereka dapat update.
+
+3. program akan berjalan sangat cepat (throughpput) akan sangat meningkan JIKA MEMANG PROGRAM KITA DAPAT DIAKASELERASI DENGAN MULTI THREADING. haysa saja implementasinya cukup susahm, setidaknya lebih susah. jika kita tidak menggunakan multi threaded di proses notifikasi. bottleneck yang sangat besar akan terjadi. service kita akan mengirimkan satu per satu. tentu waktu yang dibutuhkan untuk menserve banyak instance akan sangat lama.
